@@ -150,3 +150,4 @@ LOGIN_URL = "/admin/login/"
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
+CSRF_TRUSTED_ORIGINS = env("CSRF_TRUSTED_ORIGINS", cast=json.loads, default=[])
