@@ -1,0 +1,13 @@
+version: '3.6'
+
+services:
+    web:
+        image: iptvrecorder
+        build: .
+        command: python start.py
+        working_dir: /app
+        ports:
+            - "35699:8000"
+        volumes:
+            - .:/app
+            - /:/user
