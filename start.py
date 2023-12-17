@@ -22,7 +22,7 @@ def launch_uwsgi():
     process = subprocess.Popen(
         "exec uwsgi --chdir=. --module=iptvrecorder.wsgi:application --env "
         f"DJANGO_SETTINGS_MODULE=iptvrecorder.settings --master --pidfile=./project-master.pid --http 0.0.0.0:{PORT} "
-        "--processes=2 --uid=1000 --gid=2000 --harakiri=20 --max-requests=100 --vacuum",
+        "--processes=2 --harakiri=20 --max-requests=20 --vacuum",
         shell=True)
 
 

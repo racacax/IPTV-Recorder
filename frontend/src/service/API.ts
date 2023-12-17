@@ -12,7 +12,7 @@ export class API {
         if(params.headers === undefined) {
             params.headers = {}
         }
-        params.headers["Authorization"] = "Token " + localStorage.getItem("token")
+        params.headers["Authorization"] = "Token " + localStorage.getItem("iptvRecorderToken")
         params.headers["X-CSRFToken"] = API.CSRF_TOKEN
         return fetch(API.API_ROOT + path, params)
     }
@@ -52,7 +52,7 @@ export class API {
             }
             return r.json()
         }).then((j: Token) => {
-            localStorage.setItem("token", j.token)
+            localStorage.setItem("iptvRecorderToken", j.token)
             return Promise.resolve()
         })
     }

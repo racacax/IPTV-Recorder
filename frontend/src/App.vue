@@ -34,7 +34,7 @@ API.check().catch(() => {
 })
 
 function logout() {
-  localStorage.removeItem("token")
+  localStorage.removeItem("iptvRecorderToken")
   router.push({"path": "/login"})
 }
 </script>
