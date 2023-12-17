@@ -259,7 +259,8 @@ function stopRecording() {
 <style scoped>
 .sources-container {
   max-height: 350px;
-  overflow: scroll;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
   .channel-logo {
     max-width: 80px;
