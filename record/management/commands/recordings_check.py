@@ -18,30 +18,32 @@ from django.conf import settings
 RUNNING_IDS = {}
 
 
-def launch_command(command_str: str, recording: Recording):
+def launch_command(command_str: str, recording: Recording, type:str):
     with open(recording.writing_directory + "logs.txt", 'a') as f:
         logging.warning(f"{recording} launched")
-        command = subprocess.Popen("exec " +
-                                   command_str,
+        command = subprocess.Popen("exec " + command_str, stdin=subprocess.PIPE,
                                    stderr=f, shell=True)
         RUNNING_IDS[recording.id] = command
-        command.communicate()
+        command.command_type = type
+        while command.poll() is None:
+            time.sleep(0.5)
         logging.warning(f"{recording} exited")
-        del RUNNING_IDS[recording.id]
+        if recording.id in RUNNING_IDS:
+            del RUNNING_IDS[recording.id]
 
 
 def launch_wget(recording: Recording, name: str):
     if '"' in name or '"' in recording.selected_source.url:  # prevent XSS
         return
     launch_command(f'wget --user-agent="{settings.USER_AGENT}" "{recording.selected_source.url}" -O "{name}"',
-                   recording)
+                   recording, "wget")
 
 
 def launch_ffmpeg(recording: Recording, name: str):
     if '"' in name or '"' in recording.selected_source.url:  # prevent XSS
         return
     launch_command(f'{settings.FFMPEG_PATH} -user_agent "{settings.USER_AGENT}" -i "{recording.selected_source.url}" -c copy "{name}"',
-                   recording)
+                   recording, "ffmpeg")
 
 
 def start_recording(recording: Recording):
@@ -74,9 +76,15 @@ def start_recording(recording: Recording):
 def stop_recording(recording: Recording):
     try:
         process: subprocess.Popen = RUNNING_IDS[recording.id]
-        process.terminate()
-    except AttributeError as e:
-        del RUNNING_IDS[recording.id]
+        if recording.id in RUNNING_IDS:
+            del RUNNING_IDS[recording.id]
+        if process.command_type == "ffmpeg":
+            process.communicate(input="q".encode("utf-8"))
+            time.sleep(30) # we allow ffmpeg 30s maximum to finish encoding job
+            if process.poll() is None:
+                process.terminate()
+        else:
+            process.terminate()
     except Exception as e:
         logging.exception(f"{e}")
 

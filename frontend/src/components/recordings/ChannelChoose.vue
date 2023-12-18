@@ -84,7 +84,7 @@ setInterval(() => {
           </div>
           <span v-if="loading">Chargement en cours...</span>
           <div class="row" v-if="!loading">
-            <div class="list-group channels mt-2 p-2" style="max-height: 500px; overflow: scroll">
+            <div class="list-group channels mt-2 p-2" style="max-height: 500px; overflow-y: scroll; ">
               <a v-for="channel in filteredChannels" href="#" class="list-group-item list-group-item-action" @click="() => {
                 btnClose.click();
                 callback(channel);
