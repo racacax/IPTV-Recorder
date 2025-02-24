@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from rest_framework import routers, serializers, viewsets
 
-from record.models import Playlist, Recording, VideoSource
+from record.models import Playlist, Recording, VideoSource, RecordingMethod
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -20,7 +20,12 @@ class ShortPlaylistSerializer(serializers.ModelSerializer):
 class PlaylistSerializer(serializers.ModelSerializer):
     class Meta:
         model = Playlist
-        fields = ["id", "url", "name", "epg_url",  "last_updated", "refresh_gap"]
+        fields = ["id", "url", "name", "last_updated", "refresh_gap"]
+
+class RecordingMethodSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RecordingMethod
+        fields = ["id", "name", "command",  "termination_string"]
 
 
 class RecordingSerializer(serializers.ModelSerializer):
@@ -47,6 +52,8 @@ class RecordingSerializer(serializers.ModelSerializer):
 
 
 class VideoSourceSerializer(serializers.ModelSerializer):
+    recording_method_id = serializers.PrimaryKeyRelatedField(queryset=RecordingMethod.objects.all())
+    recording_id = serializers.PrimaryKeyRelatedField(queryset=Recording.objects.all())
     class Meta:
         model = VideoSource
-        fields = ["id", "url", "name", "logo", "recording_method", "index"]
+        fields = ["id", "url", "name", "logo", "recording_method_id", "index", "recording_id"]

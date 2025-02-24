@@ -11,7 +11,7 @@
             <router-link class="nav-link" to="/recordings">Mes enregistrements</router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/playlists">Mes playlists</router-link>
+            <a class="nav-link" target="_blank" :href="API.API_ROOT + 'admin'">Admin</a>
           </li>
         </ul>
         <div class="d-flex">
@@ -25,11 +25,11 @@
   </div>
 </template>
 <script setup>
-import { API } from "./service/API.ts"
+import {API, CheckClient} from "./service/API.ts"
 import { useRouter } from 'vue-router'
 const router = useRouter()
-
-API.check().catch(() => {
+const { fetchFn } = CheckClient.list({lazy: true})
+fetchFn().catch(() => {
   router.push({"path": "/login"})
 })
 

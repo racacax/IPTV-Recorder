@@ -16,7 +16,7 @@ export interface VideoSource {
     url:              string;
     name:             string;
     logo:             string|null;
-    recording_method: string;
+    recording_method_id: number;
     index: number;
 }
 export interface FVideoSource extends VideoSource{
@@ -52,4 +52,11 @@ export interface Tvg {
     id:   string;
     name: string;
     url:  null;
+}
+
+export interface RecordingMethod {
+    id:                  number;
+    name:   string;
+    command:          string;
+    termination_string:            string;
 }

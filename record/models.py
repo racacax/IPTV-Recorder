@@ -21,8 +21,6 @@ class Playlist(models.Model):
     url = models.TextField()
     playlist_cache_file = models.TextField(default=random_file_name)
     name = models.TextField()
-    epg_url = models.TextField()
-    epg_cache_directory = models.TextField(default=random_file_name)
     last_updated = models.DateTimeField(default=datetime.datetime.fromtimestamp(0, tz=timezone.get_default_timezone()))
     refresh_gap = models.IntegerField(default=12)  # refresh every x hours
     user = models.ForeignKey("auth.User", on_delete=models.CASCADE)
@@ -48,15 +46,23 @@ class Recording(models.Model):
     class Meta:
         ordering = ("-start_time",)
 
+    def __str__(self):
+        return self.name + " (" + self.user.__str__() + ")"
 
 class VideoSource(models.Model):
     recording = models.ForeignKey("record.Recording", on_delete=models.CASCADE, related_name="video_sources")
     url = models.TextField()
     name = models.TextField()
     logo = models.TextField(null=True)
-    recording_method = models.CharField(max_length=64,
-                                        choices=[("wget", "wget"), ("ffmpeg", "ffmpeg")])
+    recording_method = models.ForeignKey("record.RecordingMethod", on_delete=models.CASCADE, related_name="video_sources")
     index = models.IntegerField(default=0)
 
     class Meta:
         ordering = ("index",)
+
+class RecordingMethod(models.Model):
+    name = models.TextField(unique=True)
+    termination_string = models.TextField(null=True)
+    command = models.TextField()
+    def __str__(self):
+        return self.name

@@ -1,45 +1,55 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import {API} from "../service/API.ts";
+import {computed, ref, watch} from 'vue'
+import {RecordingClient} from "../service/API.ts";
 import RecordingForm from "./recordings/RecordingForm.vue";
 import RecordingItem from "./recordings/RecordingItem.vue";
-import {FRecording, Recording} from "../service/entities.ts";
+import {FRecording} from "../service/entities.ts";
 import {getStatus} from "../service/utils";
 
-const recordings = ref([]);
 const selectedRecording = ref({})
+const additionalRecordings = ref([])
 function setSelectedRecording(i) {
-  selectedRecording.value = recordings.value[i]
+  selectedRecording.value = allRecordings.value[i]
 }
-let loading = true;
-function loadRecordings(selectedRecording = -1) {
-  API.getRecordings().then((r) => {
-    recordings.value = r;
-    loading = false;
-    if(r.length > 0) {
-      if(selectedRecording == -1) {
+const {loading, data: recordings, error, fetchFn} = RecordingClient.list()
+
+const allRecordings = computed(() => [...(recordings.value ?? []), ...additionalRecordings.value])
+const reloadRecordings = (id: number) => {
+  selectedRecording.value = {id: id}
+  fetchFn()
+  additionalRecordings.value = []
+}
+watch(recordings, () => {
+  let found = false;
+  if(allRecordings.value && allRecordings.value.length > 0) {
+    if(!selectedRecording.value) {
+      setSelectedRecording(0);
+    } else {
+      allRecordings.value.forEach((e, i) => {
+        if(e.id == selectedRecording.value.id) {
+          setSelectedRecording(i);
+          found = true;
+          return;
+        }
+      })
+      if(!found)  {
         setSelectedRecording(0);
-      } else {
-        r.forEach((e, i) => {
-          if(e.id == selectedRecording) {
-            setSelectedRecording(i);
-            return;
-          }
-        })
       }
     }
-  }).catch((e) => {
-    alert(e)
-    loading = false;
-  })
-}
-loadRecordings();
+  }
+})
+
+watch(error, () => {
+  if(error) {
+    alert(error.value)
+  }
+})
 
 const addRecordingBtn = ref();
 function addRecording() {
   const recording : Partial<FRecording> = {name: "Nouvel enregistrement", id: Date.now(), action: "create"}
-  recordings.value.push(recording)
-  setSelectedRecording(recordings.value.length - 1)
+  additionalRecordings.value.push(recording)
+  setSelectedRecording(allRecordings.value.length - 1)
 }
 const recordingsContainer = ref()
 const w = window;
@@ -52,7 +62,7 @@ const passed = ref(true);
 const running = ref(true);
 const upcoming = ref(true);
 function getFilteredRecordings() {
-  return recordings.value.filter((e) => {
+  return (allRecordings.value ?? []).filter((e) => {
     if(e.name.toLowerCase().includes(search.value.toLowerCase())) {
       const type = getStatus(e);
       if(type == "passed" && !passed.value) {
@@ -98,7 +108,7 @@ function getFilteredRecordings() {
       </div>
     </div>
     <div class="col-12 col-lg-6">
-      <RecordingForm v-if="Object.keys(selectedRecording).length > 0" v-bind="selectedRecording" v-bind:callback="loadRecordings" />
+      <RecordingForm v-if="Object.keys(selectedRecording).length > 0 && selectedRecording.id" :key="`${selectedRecording.id}-${loading}`" v-bind="selectedRecording" v-bind:callback="reloadRecordings" />
     </div>
   </div>
 </template>

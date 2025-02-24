@@ -16,9 +16,9 @@ from m3u_parser import M3uParser
 from rest_framework import viewsets
 from rest_framework.views import APIView
 
-from record.models import Playlist, Recording, VideoSource, UserData
+from record.models import Playlist, Recording, VideoSource, UserData, RecordingMethod
 from record.serializers import UserSerializer, PlaylistSerializer, ShortPlaylistSerializer, RecordingSerializer, \
-    VideoSourceSerializer
+    VideoSourceSerializer, RecordingMethodSerializer
 from django.conf import settings
 
 
@@ -43,8 +43,8 @@ class PlaylistViewSet(viewsets.ModelViewSet):
         if serializer.is_valid():
             data = serializer.data
             data['user'] = self.request.user
-            Playlist.objects.create(**data)
-            return JsonResponse(status=200, data={"created": True})
+            created = Playlist.objects.create(**data)
+            return JsonResponse(status=200, data={"created": True, "id": created.id})
         return JsonResponse(status=400, data={"created": False})
 
 
@@ -87,16 +87,13 @@ class VideoSourceViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         arg = {}
         if "recording_id" in self.kwargs:
-            arg = {"recording__id": self.kwargs["recording_id"]}
-        return VideoSource.objects.filter(recording__user=self.request.user, **arg)
+            arg = {"recording_id": self.kwargs["recording_id"]}
+        return self.queryset.filter(recording__user=self.request.user, **arg)
 
     def create(self, request, *args, **kwargs):
-        if "recording_id" not in self.kwargs:
-            return
-        serializer = self.get_serializer(data=request.data)
+        serializer = VideoSourceSerializer(data=request.data)
         if serializer.is_valid():
             data = serializer.data
-            data["recording_id"] = self.kwargs["recording_id"]
             VideoSource.objects.create(**data)
             return JsonResponse(status=200, data={"created": True})
         return JsonResponse(status=400, data={"created": False})
@@ -130,3 +127,19 @@ class LoggedView(APIView):
             return JsonResponse(status=200, data={"message": "All good"})
         return JsonResponse(status=400, data={"message": "User not authenticated"})
 
+
+
+class RecordingMethodViewSet(viewsets.ModelViewSet):
+    queryset = RecordingMethod.objects.all()
+    serializer_class = RecordingMethodSerializer
+
+    def get_queryset(self):
+        return self.queryset
+
+    def create(self, request):
+        serializer = RecordingMethodSerializer(data=request.data)
+        if serializer.is_valid():
+            data = serializer.data
+            created = RecordingMethodSerializer.objects.create(**data)
+            return JsonResponse(status=200, data={"created": True, "id": created.id})
+        return JsonResponse(status=400, data={"created": False})

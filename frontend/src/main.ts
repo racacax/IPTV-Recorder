@@ -4,7 +4,6 @@ import App from './App.vue'
 import Home from './components/Home.vue'
 import VueLazyload from 'vue-lazyload'
 import Recordings from './components/Recordings.vue'
-import Playlists from './components/Playlists.vue'
 import Login from './components/Login.vue'
 // Import our custom CSS
 import './scss/styles.scss'
@@ -27,7 +26,6 @@ const routes = [
     { path: '/', component: Recordings },
     { path: '/recordings', component: Recordings },
     { path: '/login', component: Login },
-    { path: '/playlists', component: Playlists },
 ]
 
 const router = createRouter({

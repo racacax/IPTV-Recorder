@@ -13,18 +13,20 @@ from django.utils import timezone
 from django.utils.text import slugify
 
 from record.models import Recording
-from django.conf import settings
 
 RUNNING_IDS = {}
 
+def format_str(base_str: str, replace_key: str, replace_value: str) -> str:
+    replace_value.replace('\\', '').replace('"', '\"')
+    return base_str.replace('{'+replace_key+'}', replace_value)
 
-def launch_command(command_str: str, recording: Recording, type:str):
+def launch_command(command_str: str, recording: Recording, termination_string :str):
     with open(recording.writing_directory + "logs.txt", 'a') as f:
-        logging.warning(f"{recording} launched")
+        logging.info(f"{recording} launched")
         command = subprocess.Popen("exec " + command_str, stdin=subprocess.PIPE,
                                    stderr=f, shell=True)
         RUNNING_IDS[recording.id] = command
-        command.command_type = type
+        command.termination_string = termination_string
         while command.poll() is None:
             time.sleep(0.5)
         logging.warning(f"{recording} exited")
@@ -32,22 +34,9 @@ def launch_command(command_str: str, recording: Recording, type:str):
             del RUNNING_IDS[recording.id]
 
 
-def launch_wget(recording: Recording, name: str):
-    if '"' in name or '"' in recording.selected_source.url:  # prevent XSS
-        return
-    launch_command(f'wget --user-agent="{settings.USER_AGENT}" "{recording.selected_source.url}" -O "{name}"',
-                   recording, "wget")
-
-
-def launch_ffmpeg(recording: Recording, name: str):
-    if '"' in name or '"' in recording.selected_source.url:  # prevent XSS
-        return
-    launch_command(f'{settings.FFMPEG_PATH} -user_agent "{settings.USER_AGENT}" -i "{recording.selected_source.url}" -c copy "{name}"',
-                   recording, "ffmpeg")
-
-
 def start_recording(recording: Recording):
     if len(recording.video_sources.all()) == 0:
+        logging.error(f"Cannot start recording {recording.name}. No video sources available.")
         return
     RUNNING_IDS[recording.id] = None
     if not path.exists(recording.writing_directory):
@@ -62,12 +51,14 @@ def start_recording(recording: Recording):
 
     recording.last_retry = datetime.datetime.now(tz=timezone.get_current_timezone())
     recording_method = recording.selected_source.recording_method
+    if not recording_method:
+        logging.error(f"Cannot start recording {recording.name}. No recording method selected.")
+        return
     name = recording.writing_directory + slugify(recording.name + " - " + recording.last_retry.strftime("%Y-%m-%d "
                                                                                                         "%H:%M:%S")) + ".mp4"
-    if recording_method == "wget":
-        threading.Thread(target=launch_wget, args=[recording, name]).start()
-    elif recording_method == "ffmpeg":
-        threading.Thread(target=launch_ffmpeg, args=[recording, name]).start()
+    command = format_str(recording_method.command, 'video_url', recording.selected_source.url)
+    command = format_str(command, 'output_file_path', name)
+    threading.Thread(target=launch_command, args=[command, recording, recording_method.termination_string]).start()
     recording.consecutive_retries += 1
     recording.total_retries += 1
     recording.save()
@@ -78,8 +69,8 @@ def stop_recording(recording: Recording):
         process: subprocess.Popen = RUNNING_IDS[recording.id]
         if recording.id in RUNNING_IDS:
             del RUNNING_IDS[recording.id]
-        if process.command_type == "ffmpeg":
-            process.communicate(input="q".encode("utf-8"))
+        if process.termination_string:
+            process.communicate(input=process.termination_string.encode("utf-8"))
             time.sleep(30) # we allow ffmpeg 30s maximum to finish encoding job
             if process.poll() is None:
                 process.terminate()
@@ -93,11 +84,12 @@ class Command(BaseCommand):
     help = "Check Recordings"
 
     def handle(self, *args, **options):
+        logging.info("Recordings check process started.")
         while True:
             current_date = datetime.datetime.now(tz=timezone.get_current_timezone())
             for recording in Recording.objects.exclude(id__in=RUNNING_IDS).filter(start_time__lte=current_date,
                                                                                   end_time__gt=current_date).prefetch_related(
-                "video_sources").select_related("selected_source"):
+                "video_sources", "video_sources__recording_method").select_related("selected_source__recording_method"):
                 try:
                     start_recording(recording)
                 except Exception as e:

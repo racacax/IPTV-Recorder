@@ -4,6 +4,7 @@ import threading
 import time
 
 import environ
+import psutil
 
 env = environ.Env(
     # set casting, default value
@@ -14,12 +15,19 @@ environ.Env.read_env("./.env")
 
 PORT = env('RUNNING_PORT', default=8000)
 ENABLE_UWSGI = env('ENABLE_UWSGI', cast=bool, default=False)
+
+def is_port_in_use(port):
+    for conn in psutil.net_connections(kind='inet'):
+        if conn.laddr.port == port:
+            return True
+    return False
+
 def launch_django_web_server():
-    process = subprocess.Popen(f"exec python manage.py runserver 0.0.0.0:{PORT}", shell=True)
+    subprocess.Popen(f"exec python manage.py runserver 0.0.0.0:{PORT}", shell=True)
 
 
 def launch_uwsgi():
-    process = subprocess.Popen(
+    subprocess.Popen(
         "exec uwsgi --chdir=. --module=iptvrecorder.wsgi:application --env "
         f"DJANGO_SETTINGS_MODULE=iptvrecorder.settings --master --pidfile=./project-master.pid --http 0.0.0.0:{PORT} "
         "--processes=2 --harakiri=20 --max-requests=20 --vacuum",
@@ -27,7 +35,10 @@ def launch_uwsgi():
 
 
 def launch_recordings_check():
-    process = subprocess.Popen("exec ./recordings_check.sh", shell=True)
+    while not is_port_in_use(PORT):
+        pass
+    print("Staring recordings check process...")
+    subprocess.Popen("exec python manage.py recordings_check", shell=True)
 
 
 if not ENABLE_UWSGI:
@@ -37,4 +48,5 @@ else:
 
 launch_recordings_check()
 while True:
-    time.sleep(1);
+    time.sleep(1)
+

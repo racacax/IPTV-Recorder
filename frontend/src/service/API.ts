@@ -1,14 +1,99 @@
-import {M3UEntity, Recording, ShortPlaylist, Token, VideoSource} from "./entities"
-import {types} from "sass";
+import {ref, Ref, watch} from "vue";
+import {M3UEntity, Playlist, Recording, RecordingMethod, Token, VideoSource} from "./entities";
 
-export class API {
+export type FetchReturn<T> = {
+    error: Ref<string | null>
+    data: Ref<T | null>
+    loading: Ref<boolean>
+    fetchFn: (body?: object) => Promise<T>
+}
+
+export type Options = {
+    lazy?: boolean
+}
+function fetchAndCatch<T>(url: Ref<string>, options: Options, method: 'GET' | 'PUT' | 'POST' | 'DELETE', formatFn: (t: any) => T): FetchReturn<T> {
+    const error: Ref<string | null> = ref(null)
+    const data: Ref<T | null> = ref(null)
+    const loading: Ref<boolean> = ref(false)
+    const fetchFn = (body?: object) => {
+        error.value = null
+        loading.value = true
+        data.value = null
+        const result = method === 'GET' ? API.fetchAuthenticated(url.value) : API.postOrPutAuthenticated(url.value, method, body)
+        return result
+            .then((r) => {
+                if (r.status >= 400) {
+                    if (r.status == 403) {
+                        error.value =
+                            'Got error :403 Forbidden. Might be rate limited (slow down your clicks bucko).'
+                        return null
+                    } else {
+                        return r
+                            .json()
+                            .then((j) => {
+                                error.value = j?.message ?? 'Unknown error'
+                                return null
+                            })
+                            .catch((_) => {
+                                error.value = 'Unknown error'
+                                return null
+                            })
+                    }
+                }
+                return r.json()
+            })
+            .catch((e) => {
+                error.value = e.toString()
+                loading.value = false
+            })
+            .then((v) => {
+                if(formatFn) {
+                    if(Object.prototype.toString.call(v) === '[object Array]') {
+                        data.value = v.map(formatFn)
+                    } else {
+                        data.value = formatFn(v)
+                    }
+                } else {
+                    data.value = v
+                }
+                loading.value = false
+                return data.value
+            })
+    }
+    if (!options.lazy) {
+        watch([url], fetchFn)
+        fetchFn()
+    }
+
+    return { error, data, loading, fetchFn }
+}
+
+function urlManager<T>(
+    getUrl: () => string,
+    refs: Ref<any>[] | (() => Record<string, unknown>)| (() => unknown),
+    options: Options,
+    method: 'GET' | 'PUT' | 'POST' | 'DELETE',
+    formatFn?: (t: any) => T
+
+): FetchReturn<T> {
+    const url = ref<string>(getUrl())
+    watch(refs, () => {
+        url.value = getUrl()
+    })
+    return fetchAndCatch(url, options, method, formatFn)
+}
+
+export class API<T> {
+    private endpoint: string;
     public static API_ROOT = "/"
     public static CSRF_TOKEN = ""
+    private formatFn: (t: any) => T;
 
-    private static fetch(path: string, params = {}) {
-        return fetch(API.API_ROOT + path, params)
+    constructor(endpoint: string, formatFn?: (t: any) => T) {
+        this.endpoint = endpoint;
+        this.formatFn = formatFn;
     }
-    private static fetchAuthenticated(path: string, params: any = {}) {
+    public static fetchAuthenticated(path: string, params: any = {}) {
         if(params.headers === undefined) {
             params.headers = {}
         }
@@ -16,7 +101,8 @@ export class API {
         params.headers["X-CSRFToken"] = API.CSRF_TOKEN
         return fetch(API.API_ROOT + path, params)
     }
-    private static postOrPutAuthenticated(path: string, method: string, data: Object) {
+
+    public static postOrPutAuthenticated(path: string, method: string, data: Object) {
         let params = {
             method: method,
             headers: {
@@ -56,115 +142,58 @@ export class API {
             return Promise.resolve()
         })
     }
-    static check() {
-        return API.fetchAuthenticated("api/check/").then(async r => {
-            if (r.status >= 300) {
-                throw (await r.text())
-            }
-            return Promise.resolve()
-        })
+
+    get(
+        getVariables: () => number,
+        options: Options = {}
+    ): FetchReturn<T> {
+        const getUrl = () => {
+            return `${this.endpoint}${getVariables()}/`
+        }
+        return urlManager(getUrl, getVariables, options, 'GET', this.formatFn)
     }
-    static getRecordings() {
-        return API.fetchAuthenticated("api/recordings/").then(async (r) : Promise<Recording[]> => {
-            if (r.status >= 300) {
-                throw (await r.text())
-            }
-            return r.json()
-        }).then((js) => {
-            js.map(j => {
-                j.start_time = new Date(j.start_time)
-                j.end_time = new Date(j.end_time)
-            })
-            return Promise.resolve(js)
-        })
+    list(
+        options: Options = {}
+    ): FetchReturn<T[]> {
+        const getUrl = () => {
+            return this.endpoint
+        }
+        return urlManager(getUrl, [], options, 'GET', this.formatFn) as FetchReturn<T[]>
+    }
+    post(
+        options: Options = {}
+    ): FetchReturn<{created: boolean, id: number}> {
+        const getUrl = () => {
+            return this.endpoint
+        }
+        return urlManager(getUrl, [], options, 'POST')
     }
 
-
-    static getPlaylists() {
-        return API.fetchAuthenticated("api/playlists/").then(async (r) : Promise<ShortPlaylist[]> => {
-            if (r.status >= 300) {
-                throw (await r.text())
-            }
-            return r.json()
-        })
-    }
-    static getChannels(playlistId: number) {
-        return API.fetchAuthenticated("api/playlists-m3u/" + playlistId + "/").then(async (r) : Promise<M3UEntity[]> => {
-            if (r.status >= 300) {
-                throw (await r.text())
-            }
-            return r.json()
-        })
-    }
-    static getRecording(id: number) {
-        return API.fetchAuthenticated("api/recordings/" + id + "/").then(async (r) : Promise<Recording> => {
-            if (r.status >= 300) {
-                throw (await r.text())
-            }
-            return r.json()
-        }).then((j) => {
-            j.start_time = new Date(j.start_time)
-            j.end_time = new Date(j.end_time)
-            return Promise.resolve(j)
-        })
-    }
-    static createRecording(data: Partial<Recording>) {
-        return API.postOrPutAuthenticated("api/recordings/", "POST", data).then(async (r) : Promise<Object> => {
-            if (r.status >= 300) {
-                throw (await r.text())
-            }
-            return r.json()
-        })
-    }
-    static updateRecording(id: number, data: Partial<Recording>) {
-        return API.postOrPutAuthenticated("api/recordings/" + id + "/", "PUT", data).then(async (r) : Promise<Object> => {
-            if (r.status >= 300) {
-                throw (await r.text())
-            }
-            return r.json()
-        })
+    put(
+        getVariables: () => number,
+        options: Options = {}
+    ): FetchReturn<T> {
+        const getUrl = () => {
+            return `${this.endpoint}${getVariables()}/`
+        }
+        return urlManager(getUrl, getVariables, options, 'PUT')
     }
 
-    static deleteRecording(id: number) {
-        return API.postOrPutAuthenticated("api/recordings/" + id + "/", "DELETE", {}).then(async (r) : Promise<Object> => {
-            if (r.status >= 300) {
-                throw (await r.text())
-            }
-            return Promise.resolve()
-        })
+    delete(
+        getVariables: () => number,
+        options: Options = {}
+    ): FetchReturn<T> {
+        const getUrl = () => {
+            return `${this.endpoint}${getVariables()}/`
+        }
+        return urlManager(getUrl, getVariables, options, 'DELETE')
     }
-
-    static createVideoSource(recordingId: number, data: Partial<VideoSource>) {
-        return API.postOrPutAuthenticated("api/video-sources/" + recordingId + "/", "POST", data).then(async (r) : Promise<Object> => {
-            if (r.status >= 300) {
-                throw (await r.text())
-            }
-            return r.json()
-        })
-    }
-    static updateVideoSource(id: number, data: Partial<VideoSource>) {
-        return API.postOrPutAuthenticated("api/video-source/" + id + "/", "PUT", data).then(async (r) : Promise<Object> => {
-            if (r.status >= 300) {
-                throw (await r.text())
-            }
-            return r.json()
-        })
-    }
-    static deleteVideoSource(id: number) {
-        return API.postOrPutAuthenticated("api/video-source/" + id + "/", "DELETE", {}).then(async (r) : Promise<Object> => {
-            if (r.status >= 300) {
-                throw (await r.text())
-            }
-            return Promise.resolve()
-        })
-    }
-    static getVideoSourcesFromRecording(recordingId: number) {
-        return API.fetchAuthenticated("api/video-sources/" + recordingId + "/").then(async (r) : Promise<VideoSource[]> => {
-            if (r.status >= 300) {
-                throw (await r.text())
-            }
-            return r.json()
-        })
-    }
-
 }
+
+export const CheckClient = new API('api/check/');
+export const RecordingClient = new API<Recording>('api/recordings/', (e: Recording) => ({...e, start_time: new Date(e.start_time), end_time: new Date(e.end_time)}));
+export const RecordingMethodClient = new API<RecordingMethod>('api/recording-methods/');
+export const PlaylistM3UClient = new API<M3UEntity[]>('api/playlists-m3u/');
+export const PlaylistClient = new API<Playlist>('api/playlists/');
+export const VideoSourcesClient = new API<VideoSource>('api/video-sources/');
+export const VideoSourceClient = new API<VideoSource>('api/video-source/');

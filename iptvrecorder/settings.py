@@ -145,7 +145,6 @@ REST_FRAMEWORK = {
 
 CORS_ALLOW_ALL_ORIGINS = True
 USER_AGENT = env("USER_AGENT", default='VLC/3.0.9 LibVLC/3.0.9')
-FFMPEG_PATH = env("FFMPEG_PATH", default='ffmpeg')
 LOGIN_URL = "/admin/login/"
 STATICFILES_DIRS = [
     BASE_DIR / "static",
