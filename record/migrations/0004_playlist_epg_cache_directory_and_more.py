@@ -7,23 +7,26 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('record', '0003_alter_playlist_last_updated_alter_recording_end_time_and_more'),
+        (
+            "record",
+            "0003_alter_playlist_last_updated_alter_recording_end_time_and_more",
+        ),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='playlist',
-            name='epg_cache_directory',
+            model_name="playlist",
+            name="epg_cache_directory",
             field=models.TextField(default=record.models.random_file_name),
         ),
         migrations.AddField(
-            model_name='playlist',
-            name='playlist_cache_file',
+            model_name="playlist",
+            name="playlist_cache_file",
             field=models.TextField(default=record.models.random_file_name),
         ),
         migrations.AddField(
-            model_name='playlist',
-            name='refresh_gap',
+            model_name="playlist",
+            name="refresh_gap",
             field=models.IntegerField(default=12),
         ),
     ]

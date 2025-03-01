@@ -5,9 +5,15 @@ from django.db import migrations, models
 
 
 def migrate_data(apps, schema_editor):
-    RecordingMethod = apps.get_model('record', 'RecordingMethod')
-    RecordingMethod.objects.filter(name="ffmpeg").update(command='ffmpeg -user_agent "VLC/3.0.9 LibVLC/3.0.9" -i "{video_url}" -c copy "{output_file_path}"', termination_string='q')
-    RecordingMethod.objects.filter(name="wget").update(command='wget --user-agent="VLC/3.0.9 LibVLC/3.0.9" "{video_url}" -O "{output_file_path}"')
+    RecordingMethod = apps.get_model("record", "RecordingMethod")
+    RecordingMethod.objects.filter(name="ffmpeg").update(
+        command='ffmpeg -user_agent "VLC/3.0.9 LibVLC/3.0.9" -i "{video_url}" -c copy "{output_file_path}"',
+        termination_string="q",
+    )
+    RecordingMethod.objects.filter(name="wget").update(
+        command='wget --user-agent="VLC/3.0.9 LibVLC/3.0.9" "{video_url}" -O "{output_file_path}"'
+    )
+
 
 class Migration(migrations.Migration):
 
@@ -33,5 +39,5 @@ class Migration(migrations.Migration):
                 to="record.recordingmethod",
             ),
         ),
-        migrations.RunPython(migrate_data)
+        migrations.RunPython(migrate_data),
     ]

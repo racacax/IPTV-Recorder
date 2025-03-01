@@ -37,8 +37,12 @@ class Recording(models.Model):
     name = models.TextField()
     gap_between_retries = models.IntegerField(default=5)  # gap in seconds
     use_backup_after = models.IntegerField(default=5)  # after how many retries do we switch to a backup source
-    selected_source = models.ForeignKey("record.VideoSource", null=True, on_delete=models.SET_NULL,
-                                        related_name="selected_recording")
+    selected_source = models.ForeignKey(
+        "record.VideoSource",
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name="selected_recording",
+    )
     last_retry = models.DateTimeField(default=datetime.datetime.fromtimestamp(0, tz=timezone.get_default_timezone()))
     consecutive_retries = models.IntegerField(default=0)
     total_retries = models.IntegerField(default=0)
@@ -49,20 +53,25 @@ class Recording(models.Model):
     def __str__(self):
         return self.name + " (" + self.user.__str__() + ")"
 
+
 class VideoSource(models.Model):
     recording = models.ForeignKey("record.Recording", on_delete=models.CASCADE, related_name="video_sources")
     url = models.TextField()
     name = models.TextField()
     logo = models.TextField(null=True)
-    recording_method = models.ForeignKey("record.RecordingMethod", on_delete=models.CASCADE, related_name="video_sources")
+    recording_method = models.ForeignKey(
+        "record.RecordingMethod", on_delete=models.CASCADE, related_name="video_sources"
+    )
     index = models.IntegerField(default=0)
 
     class Meta:
         ordering = ("index",)
 
+
 class RecordingMethod(models.Model):
     name = models.TextField(unique=True)
     termination_string = models.TextField(null=True)
     command = models.TextField()
+
     def __str__(self):
         return self.name

@@ -6,14 +6,14 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('record', '0006_remove_recording_sources_videosource_recording_and_more'),
+        ("record", "0006_remove_recording_sources_videosource_recording_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='recording',
-            name='writing_directory',
-            field=models.TextField(default='/user/'),
+            model_name="recording",
+            name="writing_directory",
+            field=models.TextField(default="/user/"),
             preserve_default=False,
         ),
     ]

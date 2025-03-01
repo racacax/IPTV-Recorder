@@ -7,13 +7,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('record', '0007_recording_writing_directory'),
+        ("record", "0007_recording_writing_directory"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='videosource',
-            name='recording',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='video_sources', to='record.recording'),
+            model_name="videosource",
+            name="recording",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="video_sources",
+                to="record.recording",
+            ),
         ),
     ]

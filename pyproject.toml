@@ -1,0 +1,3 @@
+[tool.black]
+line-length = 120
+exclude = "(venv|migrations|cache|logs|node_modules|.git|.idea|frontend)"

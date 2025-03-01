@@ -1,7 +1,7 @@
 DOCKER_EXE		= docker exec -i
 DOCKER_EXE_TTY	= docker exec -it
 DCO_EXE			= docker-compose
-PYTHON			= ${DOCKER_EXE_TTY} iptv-recorder_web_1 python
+PYTHON			= ${DOCKER_EXE_TTY} iptvrecorder python
 
 up_d:
 	${DCO_EXE} up
@@ -16,7 +16,7 @@ migrate_d:
 init_d: migrate_d
 	${PYTHON} manage.py createsuperuser
 bash ssh:
-	${DOCKER_EXE_TTY} iptv-recorder_web_1 bash
+	${DOCKER_EXE_TTY} iptvrecorder bash
 
 up:
 	python start.py
@@ -28,3 +28,6 @@ migrate:
 	python manage.py migrate
 init: migrate
 	python manage.py createsuperuser
+lint:
+	python -m black .
+	python -m flake8 .

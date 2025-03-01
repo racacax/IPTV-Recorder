@@ -7,28 +7,44 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('record', '0002_videosource_playlist_last_updated_playlist_name_and_more'),
+        ("record", "0002_videosource_playlist_last_updated_playlist_name_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='playlist',
-            name='last_updated',
-            field=models.DateTimeField(default=datetime.datetime(1970, 1, 1, 0, 0, tzinfo=datetime.timezone.utc)),
+            model_name="playlist",
+            name="last_updated",
+            field=models.DateTimeField(
+                default=datetime.datetime(
+                    1970, 1, 1, 0, 0, tzinfo=datetime.timezone.utc
+                )
+            ),
         ),
         migrations.AlterField(
-            model_name='recording',
-            name='end_time',
-            field=models.DateTimeField(default=datetime.datetime(1970, 1, 1, 0, 0, tzinfo=datetime.timezone.utc)),
+            model_name="recording",
+            name="end_time",
+            field=models.DateTimeField(
+                default=datetime.datetime(
+                    1970, 1, 1, 0, 0, tzinfo=datetime.timezone.utc
+                )
+            ),
         ),
         migrations.AlterField(
-            model_name='recording',
-            name='last_retry',
-            field=models.DateTimeField(default=datetime.datetime(1970, 1, 1, 0, 0, tzinfo=datetime.timezone.utc)),
+            model_name="recording",
+            name="last_retry",
+            field=models.DateTimeField(
+                default=datetime.datetime(
+                    1970, 1, 1, 0, 0, tzinfo=datetime.timezone.utc
+                )
+            ),
         ),
         migrations.AlterField(
-            model_name='recording',
-            name='start_time',
-            field=models.DateTimeField(default=datetime.datetime(1970, 1, 1, 0, 0, tzinfo=datetime.timezone.utc)),
+            model_name="recording",
+            name="start_time",
+            field=models.DateTimeField(
+                default=datetime.datetime(
+                    1970, 1, 1, 0, 0, tzinfo=datetime.timezone.utc
+                )
+            ),
         ),
     ]

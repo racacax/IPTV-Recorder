@@ -7,23 +7,32 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('record', '0005_recording_user'),
+        ("record", "0005_recording_user"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='recording',
-            name='sources',
+            model_name="recording",
+            name="sources",
         ),
         migrations.AddField(
-            model_name='videosource',
-            name='recording',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, to='record.recording'),
+            model_name="videosource",
+            name="recording",
+            field=models.ForeignKey(
+                default=1,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="record.recording",
+            ),
             preserve_default=False,
         ),
         migrations.AlterField(
-            model_name='recording',
-            name='selected_source',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='selected_recording', to='record.videosource'),
+            model_name="recording",
+            name="selected_source",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="selected_recording",
+                to="record.videosource",
+            ),
         ),
     ]

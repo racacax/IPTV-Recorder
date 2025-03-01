@@ -3,22 +3,25 @@ import logging
 import shutil
 from datetime import timedelta
 
-from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.models import User
-from django.http import JsonResponse, QueryDict
-from django.middleware.csrf import get_token
+from django.http import JsonResponse
 from django.utils import timezone
 from django.utils.crypto import get_random_string
 from django.utils.text import slugify
-from django.views import View
 from django.views.generic import TemplateView
 from m3u_parser import M3uParser
 from rest_framework import viewsets
 from rest_framework.views import APIView
 
 from record.models import Playlist, Recording, VideoSource, UserData, RecordingMethod
-from record.serializers import UserSerializer, PlaylistSerializer, ShortPlaylistSerializer, RecordingSerializer, \
-    VideoSourceSerializer, RecordingMethodSerializer
+from record.serializers import (
+    UserSerializer,
+    PlaylistSerializer,
+    ShortPlaylistSerializer,
+    RecordingSerializer,
+    VideoSourceSerializer,
+    RecordingMethodSerializer,
+)
 from django.conf import settings
 
 
@@ -42,7 +45,7 @@ class PlaylistViewSet(viewsets.ModelViewSet):
         serializer = PlaylistSerializer(data=request.data)
         if serializer.is_valid():
             data = serializer.data
-            data['user'] = self.request.user
+            data["user"] = self.request.user
             created = Playlist.objects.create(**data)
             return JsonResponse(status=200, data={"created": True, "id": created.id})
         return JsonResponse(status=400, data={"created": False})
@@ -63,11 +66,13 @@ class RecordingViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             data = serializer.data
-            data['user'] = self.request.user
-            del data['is_running']
-            del data['default_source']
+            data["user"] = self.request.user
+            del data["is_running"]
+            del data["default_source"]
             user_data = UserData.objects.get(user=self.request.user)
-            data["writing_directory"] = user_data.writing_directory + slugify(data["name"] + "-" + get_random_string(8))  + "/"
+            data["writing_directory"] = (
+                user_data.writing_directory + slugify(data["name"] + "-" + get_random_string(8)) + "/"
+            )
             recording = Recording.objects.create(**data)
             return JsonResponse(status=200, data={"created": True, "id": recording.id})
         return JsonResponse(status=400, data={"created": False})
@@ -106,7 +111,11 @@ class PlaylistView(PlaylistViewSet):
             obj: Playlist = self.get_object()
             if timezone.now() - obj.last_updated > timedelta(hours=obj.refresh_gap):
                 parser = M3uParser(timeout=30, useragent=settings.USER_AGENT)
-                parser.parse_m3u(obj.url, check_live=False, schemes=["http", "https", "rtsp", "udp", "rtmp", "mms"])
+                parser.parse_m3u(
+                    obj.url,
+                    check_live=False,
+                    schemes=["http", "https", "rtsp", "udp", "rtmp", "mms"],
+                )
                 with open(str(settings.BASE_DIR) + "/cache/" + obj.playlist_cache_file, "w") as f:
                     f.write(json.dumps(parser.get_list()))
                     f.close()
@@ -126,7 +135,6 @@ class LoggedView(APIView):
         if self.request.user.is_authenticated:
             return JsonResponse(status=200, data={"message": "All good"})
         return JsonResponse(status=400, data={"message": "User not authenticated"})
-
 
 
 class RecordingMethodViewSet(viewsets.ModelViewSet):

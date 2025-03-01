@@ -3,6 +3,7 @@ version: '3.6'
 services:
     web:
         image: iptvrecorder
+        container_name: iptvrecorder
         build: .
         command: python start.py
         working_dir: /app

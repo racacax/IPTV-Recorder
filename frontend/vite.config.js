@@ -1,5 +1,5 @@
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
+import { defineConfig } from "vite";
+import vue from "@vitejs/plugin-vue";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -7,12 +7,18 @@ export default defineConfig({
     preprocessorOptions: {
       scss: {
         additionalData: `@use "./src/scss/variables.scss" as *;`,
-        silenceDeprecations: ['mixed-decls', 'color-functions', 'global-builtin', 'import', 'legacy-js-api']
-      }
-    }
+        silenceDeprecations: [
+          "mixed-decls",
+          "color-functions",
+          "global-builtin",
+          "import",
+          "legacy-js-api",
+        ],
+      },
+    },
   },
   plugins: [vue()],
   build: {
-    outDir: '../dist'
+    outDir: "../dist",
   },
-})
+});

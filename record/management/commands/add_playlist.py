@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.core.management import BaseCommand
 
-from record.models import UserData, Playlist
+from record.models import Playlist
 
 
 class Command(BaseCommand):
