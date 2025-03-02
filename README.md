@@ -13,6 +13,8 @@ Multiple playlists and accounts are supported. This tool was created with the ai
 ### Dockerfile
 A docker image is provided along with the tool which allows you to install just by typing `docker-compose build` or `make update`. This image is shipped with `ffmpeg` and `wget` which are the two main recording methods available. To add custom commands, you'll need to either edit `Dockerfile` or use `make bash` to install other dependencies.
 
+**If you use Docker, the output port will be 35699. However, you must keep 8000 as a port in the configuration.**
+
 If you plan to run the software on Windows, you will most likely require to use it.
 ### Normal installation
 #### Requirements

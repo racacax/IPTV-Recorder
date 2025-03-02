@@ -132,10 +132,10 @@ setInterval(() => {
               />
             </div>
           </div>
-          <span v-if="loading ?? channelsLoading">{{
+          <span v-if="loading || channelsLoading">{{
             gettext("Chargement en cours...")
           }}</span>
-          <div v-if="!loading" class="row">
+          <div class="row">
             <div
               class="list-group channels mt-2 p-2"
               style="max-height: 500px; overflow-y: scroll"
