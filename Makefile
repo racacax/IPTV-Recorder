@@ -18,6 +18,8 @@ i18n-generate_d:
 	${DOCKER_EXE} make i18n-generate
 i18n-compile_d:
 	${DOCKER_EXE} make i18n-compile
+lint_d:
+	${DOCKER_EXE} make lint
 bash ssh:
 	${DOCKER_EXE_TTY} iptvrecorder bash
 
