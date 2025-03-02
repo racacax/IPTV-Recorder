@@ -1,6 +1,6 @@
 DOCKER_EXE		= docker exec -i
 DOCKER_EXE_TTY	= docker exec -it
-DCO_EXE			= docker-compose
+DCO_EXE			= docker compose
 PYTHON			= ${DOCKER_EXE_TTY} iptvrecorder python
 
 up_d:
