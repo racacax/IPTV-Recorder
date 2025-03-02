@@ -34,9 +34,9 @@ ENABLE_UWSGI=False // False if dev mode. Use True for production use !
 ```
 For the next steps, we will consider you are not in production mode and UWSGI is not enabled (yet).
 ### Start project
-Start project by typing `make up` (or `make up_d` if using Docker).
+Start project by typing `make up` (or `make up_d` if using Docker). An error will appear but that's normal.
 ### User creation
-You first need to create a superuser by typing command `make init` (or `make init_d` if using Docker).
+You first need to create a superuser by typing command `make init` (or `make init_d` if using Docker). After that, close program and restart it using `make up ` or `make up_d`.
 ### Command line vs Django Admin
 IPTV Recorder is built with Django framework which provides an admin.
 

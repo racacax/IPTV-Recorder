@@ -1,7 +1,6 @@
-DOCKER_EXE		= docker exec -i
+DOCKER_EXE		= docker exec -i iptvrecorder
 DOCKER_EXE_TTY	= docker exec -it
 DCO_EXE			= docker compose
-PYTHON			= ${DOCKER_EXE_TTY} iptvrecorder python
 
 up_d:
 	${DCO_EXE} up
@@ -10,11 +9,15 @@ up_detached_d:
 update build:
 	${DCO_EXE} build
 migrations_d:
-	${PYTHON} manage.py makemigrations
+	${DOCKER_EXE} make migrations
 migrate_d:
-	${PYTHON} manage.py migrate
-init_d: migrate_d
-	${PYTHON} manage.py createsuperuser
+	${DOCKER_EXE} make migrate
+init_d:
+	${DOCKER_EXE} make init
+i18n-generate_d:
+	${DOCKER_EXE} make i18n-generate
+i18n-compile_d:
+	${DOCKER_EXE} make i18n-compile
 bash ssh:
 	${DOCKER_EXE_TTY} iptvrecorder bash
 
