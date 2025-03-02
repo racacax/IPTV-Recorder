@@ -1,5 +1,5 @@
 DOCKER_EXE		= docker exec -i iptvrecorder
-DOCKER_EXE_TTY	= docker exec -it
+DOCKER_EXE_TTY	= docker exec -it iptvrecorder
 DCO_EXE			= docker compose
 
 up_d:
@@ -21,7 +21,7 @@ i18n-compile_d:
 lint_d:
 	${DOCKER_EXE} make lint
 bash ssh:
-	${DOCKER_EXE_TTY} iptvrecorder bash
+	${DOCKER_EXE_TTY} bash
 
 up:
 	python start.py
