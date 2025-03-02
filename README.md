@@ -1,4 +1,6 @@
 # IPTV Recorder
+Also available in french 🇫🇷: [README_fr.md](README_fr.md)
+
 IPTV Recorder is a tool which allows to record streaming links like a PVR on a server. 
 This tool provides:
 - A server-side script which will manage your recordings (start, stop, retries)
@@ -27,6 +29,7 @@ ALLOWED_HOSTS=["localhost", "0.0.0.0"] // add any other host you may need
 DEBUG=True // or False in production mode
 RUNNING_PORT=8000 // or any other port
 HOST=0.0.0.0
+LANGUAGE_CODE=fr // or en for english
 ENABLE_UWSGI=False // False if dev mode. Use True for production use !
 ```
 For the next steps, we will consider you are not in production mode and UWSGI is not enabled (yet).

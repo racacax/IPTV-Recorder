@@ -2,6 +2,7 @@
 import { PropType, ref, watch } from "vue";
 import { VideoSource } from "../../service/entities";
 import { getStatus } from "../../service/utils";
+import { gettext } from "../../main";
 
 const props = defineProps({
   isActive: Boolean,
@@ -44,12 +45,14 @@ changeColor();
           {{ props.end_time && props.end_time.toLocaleString() }}
         </p>
         <p class="card-text">
-          <strong>Essais :</strong> {{ props.total_retries ?? 0 }}
+          <strong>{{ gettext("Essais :") }}</strong>
+          {{ props.total_retries ?? 0 }}
         </p>
         <p class="card-text">
-          <strong>Chaine :</strong>
+          <strong>{{ gettext("Chaine :") }}</strong>
           {{
-            (props.default_source && props.default_source.name) ?? "Inconnue"
+            (props.default_source && props.default_source.name) ??
+            gettext("Inconnue")
           }}
         </p>
       </div>

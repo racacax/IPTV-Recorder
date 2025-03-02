@@ -20,19 +20,23 @@
       >
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <router-link class="nav-link" to="/recordings"
-              >Mes enregistrements</router-link
-            >
+            <router-link class="nav-link" to="/recordings">{{
+              gettext("Mes enregistrements")
+            }}</router-link>
           </li>
           <li class="nav-item">
-            <a class="nav-link" target="_blank" :href="API.API_ROOT + 'admin'"
-              >Admin</a
+            <a
+              class="nav-link"
+              target="_blank"
+              :href="API.API_ROOT + 'admin'"
+              >{{ gettext("Admin") }}</a
             >
           </li>
         </ul>
         <div class="d-flex">
           <button class="btn btn-outline-success" type="button" @click="logout">
-            <font-awesome-icon :icon="['fas', 'unlock']" /> Se déconnecter
+            <font-awesome-icon :icon="['fas', 'unlock']" />
+            {{ gettext("Se déconnecter") }}
           </button>
         </div>
       </div>
@@ -45,6 +49,7 @@
 <script setup>
 import { API, CheckClient } from "./service/API.ts";
 import { useRouter } from "vue-router";
+import { gettext } from "./main.ts";
 const router = useRouter();
 const { fetchFn } = CheckClient.list({ lazy: true });
 fetchFn().catch(() => {

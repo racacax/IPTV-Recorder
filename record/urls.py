@@ -1,4 +1,5 @@
 from django.urls import path, re_path
+from django.views.i18n import JavaScriptCatalog
 from rest_framework.authtoken.views import obtain_auth_token
 
 from record import views
@@ -41,6 +42,7 @@ urlpatterns = [
         views.VideoSourceViewSet.as_view({"get": "retrieve", "put": "update", "delete": "destroy"}),
     ),
     path("api/token/", obtain_auth_token),
+    path("jsi18n/", JavaScriptCatalog.as_view(), name="javascript-catalog"),
     re_path(r"^(?P<path>([^/]+/)*)$", views.MainView.as_view()),  # every pattern that doesn't correspond to API will
     # use frontend
 ]

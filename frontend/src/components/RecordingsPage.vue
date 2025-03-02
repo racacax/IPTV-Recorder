@@ -5,6 +5,7 @@ import RecordingForm from "./recordings/RecordingForm.vue";
 import RecordingItem from "./recordings/RecordingItem.vue";
 import { FRecording } from "../service/entities.ts";
 import { getStatus } from "../service/utils";
+import { gettext } from "../main";
 
 const selectedRecording = ref({});
 const additionalRecordings = ref([]);
@@ -51,7 +52,7 @@ watch(error, () => {
 const addRecordingBtn = ref();
 function addRecording() {
   const recording: Partial<FRecording> = {
-    name: "Nouvel enregistrement",
+    name: gettext("Nouvel enregistrement"),
     id: Date.now(),
     action: "create",
   };
@@ -90,20 +91,20 @@ function getFilteredRecordings() {
   <div class="row gy-3">
     <div class="col-12 col-lg-6">
       <h2>
-        Mes enregistrements
+        {{ gettext("Mes enregistrements") }}
         <button
           ref="addRecordingBtn"
           type="button"
           class="btn btn-primary"
           @click="addRecording"
         >
-          <font-awesome-icon icon="fa-solid fa-plus" /> Ajouter
+          <font-awesome-icon icon="fa-solid fa-plus" /> {{ gettext("Ajouter") }}
         </button>
       </h2>
       <div class="row mb-2">
         <div class="d-flex gap-2 col-lg-6 col-12">
           <label for="search-recording" class="form-label col-4 mt-2"
-            >Rechercher :
+            >{{ gettext("Rechercher :") }}
           </label>
           <input
             id="search-channel"
@@ -119,7 +120,7 @@ function getFilteredRecordings() {
               type="checkbox"
               :checked="passed"
               @change="passed = !passed"
-            /><label for="passed">Passés</label>
+            /><label for="passed">{{ gettext("Passés") }}</label>
           </div>
           <div class="d-inline-flex gap-2">
             <input
@@ -128,7 +129,7 @@ function getFilteredRecordings() {
               type="checkbox"
               :checked="running"
               @change="running = !running"
-            /><label for="running">En cours</label>
+            /><label for="running">{{ gettext("En cours") }}</label>
           </div>
           <div class="d-inline-flex gap-2">
             <input
@@ -137,11 +138,11 @@ function getFilteredRecordings() {
               type="checkbox"
               :checked="upcoming"
               @change="upcoming = !upcoming"
-            /><label for="upcoming">A venir</label>
+            /><label for="upcoming">{{ gettext("A venir") }}</label>
           </div>
         </div>
       </div>
-      <div v-if="loading">Chargement en cours...</div>
+      <div v-if="loading">{{ gettext("Chargement en cours...") }}</div>
       <div
         ref="recordingsContainer"
         class="overflow-y-scroll overflow-x-hidden"

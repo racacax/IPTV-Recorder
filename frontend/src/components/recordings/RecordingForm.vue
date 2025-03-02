@@ -7,7 +7,8 @@ import {
   VideoSourcesClient,
 } from "../../service/API";
 import ChannelChoose from "./ChannelChoose.vue";
-import { FVideoSource, M3UEntity, Recording } from "../../service/entities";
+import { FVideoSource, M3UEntity } from "../../service/entities";
+import { gettext } from "../../main.ts";
 
 const submitBtn = ref();
 const isDisplayingModal = ref(false);
@@ -135,12 +136,12 @@ function setUseBackupAfter(e) {
   useBackupAfter.value = e;
 }
 const minMaxTime = computed(() => {
-  if(new Date(startTime.value).getTime() > new Date().getTime()) {
-    return startTime
+  if (new Date(startTime.value).getTime() > new Date().getTime()) {
+    return startTime;
   } else {
-    return formatDate(new Date())
+    return formatDate(new Date());
   }
-})
+});
 
 function addOrEditOrDeleteSource(source: Partial<FVideoSource>) {
   if (source.action === "delete") {
@@ -168,7 +169,7 @@ function addOrEditOrDeleteSource(source: Partial<FVideoSource>) {
 function addOrEditRecording() {
   submitBtn.value.disabled = "disabled";
   if (allSources.value.filter((e) => e.action !== "delete").length === 0) {
-    alert("Vous devez au minimum ajouter une source");
+    alert(gettext("Vous devez au minimum ajouter une source"));
     submitBtn.value.disabled = "";
   } else {
     let promise = null;
@@ -201,7 +202,7 @@ function addOrEditRecording() {
         Promise.all(promises)
           .then(() => {
             props.callback(id.value);
-            alert("Sauvegardé avec succès");
+            alert(gettext("Sauvegardé avec succès"));
             submitBtn.value.disabled = "";
           })
           .catch((e) => alert(e));
@@ -214,7 +215,9 @@ function addOrEditRecording() {
 function deleteRecordingFn() {
   if (
     confirm(
-      "Êtes-vous sûr de vouloir supprimer cet enregistrement (fichiers video inclus) ?",
+      gettext(
+        "Êtes-vous sûr de vouloir supprimer cet enregistrement (fichiers video inclus) ?",
+      ),
     )
   ) {
     deleteRecording(props.id)
@@ -226,7 +229,7 @@ function deleteRecordingFn() {
 }
 
 function stopRecording() {
-  if (confirm("Êtes-vous sûr de vouloir stopper l'enregistrement ?")) {
+  if (confirm(gettext("Êtes-vous sûr de vouloir stopper l'enregistrement ?"))) {
     endTime.value = formatDate(new Date());
     addOrEditRecording();
   }
@@ -243,15 +246,18 @@ function stopRecording() {
       type="button"
       @click="stopRecording"
     >
-      <font-awesome-icon icon="fa-solid fa-stop" /> Stopper l'enregistrement
+      <font-awesome-icon icon="fa-solid fa-stop" />
+      {{ gettext("Stopper l'enregistrement") }}
     </button>
-    <h2 v-if="props.action === 'create'">Ajouter un enregistrement</h2>
-    <h2 v-else>Modifier un enregistrement</h2>
+    <h2 v-if="props.action === 'create'">
+      {{ gettext("Ajouter un enregistrement") }}
+    </h2>
+    <h2 v-else>{{ gettext("Modifier un enregistrement") }}</h2>
     <form @submit.prevent="addOrEditRecording">
       <div class="mb-3">
-        <label for="recording-name" class="form-label"
-          >Nom de l'enregistrement</label
-        >
+        <label for="recording-name" class="form-label">{{
+          gettext("Nom de l'enregistrement")
+        }}</label>
         <input
           id="recording-name"
           type="text"
@@ -262,9 +268,9 @@ function stopRecording() {
       </div>
       <div class="mb-3 row">
         <div class="col-6">
-          <label for="start-time" class="form-label"
-            >Date et heure de début</label
-          >
+          <label for="start-time" class="form-label">{{
+            gettext("Date et heure de début")
+          }}</label>
           <input
             id="start-time"
             required
@@ -276,7 +282,9 @@ function stopRecording() {
           />
         </div>
         <div class="col-6">
-          <label for="end-time" class="form-label">Date et heure de fin</label>
+          <label for="end-time" class="form-label">{{
+            gettext("Date et heure de fin")
+          }}</label>
           <input
             id="end-time"
             required
@@ -288,9 +296,9 @@ function stopRecording() {
           />
         </div>
         <div class="col-6">
-          <label for="gap-between-retries" class="form-label"
-            >Intervalle en secondes entre chaque essai</label
-          >
+          <label for="gap-between-retries" class="form-label">{{
+            gettext("Intervalle en secondes entre chaque essai")
+          }}</label>
           <input
             id="gap-between-retries"
             required
@@ -301,9 +309,9 @@ function stopRecording() {
           />
         </div>
         <div class="col-6">
-          <label for="use-backup-after" class="form-label"
-            >Nombre d'échecs avant changement</label
-          >
+          <label for="use-backup-after" class="form-label">{{
+            gettext("Nombre d'échecs avant changement")
+          }}</label>
           <input
             id="use-backup-after"
             required
@@ -317,17 +325,18 @@ function stopRecording() {
       <div class="mb-3">
         <div class="d-flex justify-content-between">
           <label for="recording-name" class="form-label"
-            >Sources ({{
+            >{{ gettext("Sources") }} ({{
               allSources.filter((e) => e.action !== "delete").length
             }})</label
           >
           <button type="button" class="btn btn-primary" @click="displayModal()">
-            <font-awesome-icon icon="fa-solid fa-plus" /> Ajouter
+            <font-awesome-icon icon="fa-solid fa-plus" />
+            {{ gettext("Ajouter") }}
           </button>
         </div>
         <span
           v-if="allSources.filter((e) => e.action !== 'delete').length === 0"
-          >Aucune source vidéo</span
+          >{{ gettext("Aucune source vidéo") }}</span
         >
         <div class="row sources-container">
           <template v-for="(source, index) in allSources">
@@ -356,10 +365,12 @@ function stopRecording() {
                       <img :src="source.logo" class="channel-logo" />
                     </div>
                     <div>
-                      <span>Nom : {{ source.name }}</span
+                      <span>{{ gettext("Nom :") }} {{ source.name }}</span
                       ><br />
                       <div class="d-flex gap-2 align-items-center">
-                        <span>Méthode: </span>
+                        <span class="text-nowrap"
+                          >{{ gettext("Méthode :") }}
+                        </span>
                         <select
                           class="form-select"
                           :value="source.recording_method_id"
@@ -390,7 +401,7 @@ function stopRecording() {
 
       <div class="mb-3 d-flex gap-2">
         <button ref="submitBtn" type="submit" class="btn btn-primary">
-          Sauvegarder l'enregistrement
+          {{ gettext("Sauvegarder l'enregistrement") }}
         </button>
         <button
           v-if="props.action !== 'create' && !props.is_running"
@@ -398,7 +409,7 @@ function stopRecording() {
           class="btn btn-danger"
           @click="deleteRecordingFn"
         >
-          Supprimer l'enregistrement
+          {{ gettext("Supprimer l'enregistrement") }}
         </button>
       </div>
     </form>

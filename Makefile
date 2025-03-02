@@ -31,3 +31,11 @@ init: migrate
 lint:
 	python -m black .
 	python -m flake8 .
+i18n-generate:
+	django-admin makemessages -l en --ignore "venv/*" --ignore "frontend/*"
+	django-admin makemessages -l fr --ignore "venv/*" --ignore "frontend/*"
+	python manage.py generate_js_i18n
+
+i18n-compile:
+	django-admin compilemessages --ignore "venv/*" --ignore "frontend/*"
+

@@ -114,7 +114,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+AVAILABLE_LANGUAGES = ["fr", "en"]
+LANGUAGE_CODE = env("LANGUAGE_CODE", default="en")
+LOCALE_PATHS = [BASE_DIR / "locale"]
 
 TIME_ZONE = env("TIME_ZONE", default="Europe/Paris")
 

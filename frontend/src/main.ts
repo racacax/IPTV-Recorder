@@ -26,6 +26,8 @@ library.add(fas);
 API.API_ROOT = window.API_ROOT;
 // @ts-ignore
 API.CSRF_TOKEN = window.CSRF_TOKEN;
+// @ts-ignore
+export const gettext = window.gettext;
 /* eslint-enable */
 const routes = [
   { path: "/", component: Recordings },

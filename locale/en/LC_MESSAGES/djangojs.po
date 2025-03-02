@@ -1,0 +1,116 @@
+#
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Mes enregistrements"
+msgstr "My recordings"
+
+msgid "Admin"
+msgstr ""
+
+msgid "Se déconnecter"
+msgstr "Logout"
+
+msgid "Nom d'utilisateur"
+msgstr "Username"
+
+msgid "Mot de passe"
+msgstr "Password"
+
+msgid "Se connecter"
+msgstr "Login"
+
+msgid "Nouvel enregistrement"
+msgstr "New recording"
+
+msgid "Ajouter"
+msgstr "Add"
+
+msgid "Rechercher :"
+msgstr "Search:"
+
+msgid "Passés"
+msgstr "Finished"
+
+msgid "En cours"
+msgstr "Ongoing"
+
+msgid "A venir"
+msgstr "Future"
+
+msgid "Chargement en cours..."
+msgstr "Loading..."
+
+msgid "Vous devez au minimum ajouter une source"
+msgstr "You must add at least one source"
+
+msgid "Sauvegardé avec succès"
+msgstr "Successfully saved"
+
+msgid "Êtes-vous sûr de vouloir stopper l'enregistrement ?"
+msgstr "Are you sure you want to stop recording ?"
+
+msgid "Stopper l'enregistrement"
+msgstr "Stop recording"
+
+msgid "Ajouter un enregistrement"
+msgstr "Add recording"
+
+msgid "Modifier un enregistrement"
+msgstr "Edit recording"
+
+msgid "Nom de l'enregistrement"
+msgstr "Recording name"
+
+msgid "Date et heure de début"
+msgstr "Start date and time"
+
+msgid "Date et heure de fin"
+msgstr "Stop date and time"
+
+msgid "Intervalle en secondes entre chaque essai"
+msgstr "Gap in seconds between each try"
+
+msgid "Nombre d'échecs avant changement"
+msgstr "Number of failures between source change"
+
+msgid "Sources"
+msgstr "Sources"
+
+msgid "Aucune source vidéo"
+msgstr "No video source"
+
+msgid "Nom :"
+msgstr "Name:"
+
+msgid "Méthode :"
+msgstr "Method:"
+
+msgid "Sauvegarder l'enregistrement"
+msgstr "Save recording"
+
+msgid "Supprimer l'enregistrement"
+msgstr "Delete recording"
+
+msgid "Essais :"
+msgstr "Tries:"
+
+msgid "Chaine :"
+msgstr "Channel:"
+
+msgid "Inconnue"
+msgstr "Unknown"
+
+msgid "Veuillez ajouter au minimum une playlist !"
+msgstr "Please add at least one playlist!"
+
+msgid "Sélectionnez une chaine"
+msgstr "Select one channel"
+
+msgid "Playlist"
+msgstr ""
+
+msgid "Rechercher"
+msgstr "Search"

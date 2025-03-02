@@ -1,0 +1,116 @@
+#
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Mes enregistrements"
+msgstr ""
+
+msgid "Admin"
+msgstr ""
+
+msgid "Se déconnecter"
+msgstr ""
+
+msgid "Nom d'utilisateur"
+msgstr ""
+
+msgid "Mot de passe"
+msgstr ""
+
+msgid "Se connecter"
+msgstr ""
+
+msgid "Nouvel enregistrement"
+msgstr ""
+
+msgid "Ajouter"
+msgstr ""
+
+msgid "Rechercher :"
+msgstr ""
+
+msgid "Passés"
+msgstr ""
+
+msgid "En cours"
+msgstr ""
+
+msgid "A venir"
+msgstr ""
+
+msgid "Chargement en cours..."
+msgstr ""
+
+msgid "Vous devez au minimum ajouter une source"
+msgstr ""
+
+msgid "Sauvegardé avec succès"
+msgstr ""
+
+msgid "Êtes-vous sûr de vouloir stopper l'enregistrement ?"
+msgstr ""
+
+msgid "Stopper l'enregistrement"
+msgstr ""
+
+msgid "Ajouter un enregistrement"
+msgstr ""
+
+msgid "Modifier un enregistrement"
+msgstr ""
+
+msgid "Nom de l'enregistrement"
+msgstr ""
+
+msgid "Date et heure de début"
+msgstr ""
+
+msgid "Date et heure de fin"
+msgstr ""
+
+msgid "Intervalle en secondes entre chaque essai"
+msgstr ""
+
+msgid "Nombre d'échecs avant changement"
+msgstr ""
+
+msgid "Sources"
+msgstr ""
+
+msgid "Aucune source vidéo"
+msgstr ""
+
+msgid "Nom :"
+msgstr ""
+
+msgid "Méthode :"
+msgstr ""
+
+msgid "Sauvegarder l'enregistrement"
+msgstr ""
+
+msgid "Supprimer l'enregistrement"
+msgstr ""
+
+msgid "Essais :"
+msgstr ""
+
+msgid "Chaine :"
+msgstr ""
+
+msgid "Inconnue"
+msgstr ""
+
+msgid "Veuillez ajouter au minimum une playlist !"
+msgstr ""
+
+msgid "Sélectionnez une chaine"
+msgstr ""
+
+msgid "Playlist"
+msgstr ""
+
+msgid "Rechercher"
+msgstr ""

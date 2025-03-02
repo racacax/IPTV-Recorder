@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import { API } from "../service/API.ts";
 import { useRouter } from "vue-router";
+import { gettext } from "../main.ts";
 
 const router = useRouter();
 const username = ref();
@@ -25,11 +26,15 @@ function login() {
   <div class="d-flex justify-content-center align-items-center w-100">
     <form>
       <div class="mb-3">
-        <label for="username" class="form-label">Nom d'utilisateur</label>
+        <label for="username" class="form-label">{{
+          gettext("Nom d'utilisateur")
+        }}</label>
         <input id="username" ref="username" type="text" class="form-control" />
       </div>
       <div class="mb-3">
-        <label for="password" class="form-label">Mot de passe</label>
+        <label for="password" class="form-label">{{
+          gettext("Mot de passe")
+        }}</label>
         <input
           id="password"
           ref="password"
@@ -43,7 +48,7 @@ function login() {
         class="btn btn-primary"
         @click="login"
       >
-        Se connecter
+        {{ gettext("Se connecter") }}
       </button>
     </form>
   </div>

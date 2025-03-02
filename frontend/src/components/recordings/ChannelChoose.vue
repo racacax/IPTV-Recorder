@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
 import { PlaylistClient, PlaylistM3UClient } from "../../service/API";
+import { gettext } from "../../main";
 
 const props = defineProps({
   id: Number,
@@ -32,7 +33,7 @@ watch(playlists, () => {
   if (playlists.value.length > 0) {
     selectedId.value = playlists.value[0].id;
   } else {
-    alert("Veuillez ajouter au minimum une playlist !");
+    alert(gettext("Veuillez ajouter au minimum une playlist !"));
   }
 });
 watch([error, channelsError], () => {
@@ -88,7 +89,7 @@ setInterval(() => {
       <div class="modal-content">
         <div class="modal-header">
           <h1 :id="'modalLabel' + props.id" class="modal-title fs-5">
-            Sélectionnez une chaine
+            {{ gettext("Sélectionnez une chaine") }}
           </h1>
           <button
             ref="btnClose"
@@ -101,7 +102,9 @@ setInterval(() => {
         </div>
         <div class="modal-body">
           <div class="row">
-            <label for="playlist" class="form-label col-4">Playlist</label>
+            <label for="playlist" class="form-label col-4">{{
+              gettext("Playlist")
+            }}</label>
             <div class="col-8">
               <select
                 id="playlist"
@@ -118,9 +121,9 @@ setInterval(() => {
                 </option>
               </select>
             </div>
-            <label for="search-channel" class="form-label col-4 mt-2"
-              >Rechercher</label
-            >
+            <label for="search-channel" class="form-label col-4 mt-2">{{
+              gettext("Rechercher")
+            }}</label>
             <div class="col-8 mt-2">
               <input
                 id="search-channel"
@@ -129,7 +132,9 @@ setInterval(() => {
               />
             </div>
           </div>
-          <span v-if="loading ?? channelsLoading">Chargement en cours...</span>
+          <span v-if="loading ?? channelsLoading">{{
+            gettext("Chargement en cours...")
+          }}</span>
           <div v-if="!loading" class="row">
             <div
               class="list-group channels mt-2 p-2"

@@ -108,7 +108,7 @@ export class API<T> {
     this.formatFn = formatFn;
   }
   public static fetchAuthenticated(path: string, params?: RequestInit) {
-    if(!params) params = {}
+    if (!params) params = {};
     if (params.headers === undefined) {
       params.headers = {};
     }
