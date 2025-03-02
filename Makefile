@@ -9,15 +9,15 @@ up_detached_d:
 update build:
 	${DCO_EXE} build
 migrations_d:
-	${DOCKER_EXE} make migrations
+	${DOCKER_EXE_TTY} make migrations
 migrate_d:
-	${DOCKER_EXE} make migrate
+	${DOCKER_EXE_TTY} make migrate
 init_d:
-	${DOCKER_EXE} make init
+	${DOCKER_EXE_TTY} make init
 i18n-generate_d:
-	${DOCKER_EXE} make i18n-generate
+	${DOCKER_EXE_TTY} make i18n-generate
 i18n-compile_d:
-	${DOCKER_EXE} make i18n-compile
+	${DOCKER_EXE_TTY} make i18n-compile
 lint_d:
 	${DOCKER_EXE} make lint
 bash ssh:

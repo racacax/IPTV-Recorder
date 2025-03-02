@@ -4,6 +4,7 @@ This tool provides:
 - A server-side script which will manage your recordings (start, stop, retries)
 - A web interface to schedule your recordings
 
+![preview](https://i.imgur.com/xM6DDKN.png)
 Multiple playlists and accounts are supported. This tool was created with the aim to be able to record streams anywhere at anytime and be able to retrieve them easily on a distant server (via SSH/SFTP with Kodi or another mediacenter).
 
 **/!\ DISCLAIMER: This tool does not provide any channel or any stream. You need to input your own M3U playlist to be able to use the software.**
@@ -22,7 +23,7 @@ If you plan to run the software on Windows, you will most likely require to use 
 To install, just type `pip install -r requirements.txt` and all dependencies should be installed.
 ## Configuration
 ### .env
-Create a .env file at root of project and fill it with
+Create a .env file at root of project and fill it with (remove all comments)
 ```dotenv
 SECRET_KEY=Your Django secret key. Can be anything, see Django docs on how to generate one
 ALLOWED_HOSTS=["localhost", "0.0.0.0"] // add any other host you may need
@@ -78,7 +79,7 @@ You may want to customize them or add other programs. All you need to do is head
 Then go to `Recording methods` and either add or edit entries.
 - Termination string can be omitted. By default it is "q" for ffmpeg. Sending q to ffmpeg triggers the end of the program and lets the encoding process finish properly (to avoid corrupted file). This may differ depending on programs (wget doesn't have one for instance).
 - command field contains the command that will be triggered. 
-It has two parameters: {video_url}
+It has two parameters:
   - {video_url} : Which will be replaced by the stream URL
   - {output_file_path} : Which will be replaced by the file destination
 
