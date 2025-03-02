@@ -1,5 +1,5 @@
 # ===== builder step =====
-FROM python:3.10.13-bookworm AS builder
+FROM python:3.12-bullseye AS builder
 
 # set work directory
 WORKDIR /app
