@@ -17,5 +17,5 @@ RUN apt update && apt install -y wget ffmpeg
 COPY requirements.txt requirements.txt /app/
 RUN pwd && ls -la && pip install --upgrade pip && pip install -r requirements.txt
 RUN chmod 777 .
-RUN make migrate
+RUN python manage.py migrate
 USER nobody
