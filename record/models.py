@@ -70,7 +70,7 @@ class VideoSource(models.Model):
 
 class RecordingMethod(models.Model):
     name = models.TextField(unique=True)
-    termination_string = models.TextField(null=True)
+    termination_string = models.TextField(null=True, blank=True)
     command = models.TextField()
 
     def __str__(self):

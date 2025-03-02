@@ -3,6 +3,7 @@ FROM python:3.10.13-bookworm AS builder
 
 # set work directory
 WORKDIR /app
+USER nobody
 
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1

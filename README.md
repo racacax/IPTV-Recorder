@@ -1,6 +1,4 @@
 # IPTV Recorder
-Also available in french 🇫🇷: [README_fr.md](README_fr.md)
-
 IPTV Recorder is a tool which allows to record streaming links like a PVR on a server. 
 This tool provides:
 - A server-side script which will manage your recordings (start, stop, retries)
@@ -12,7 +10,9 @@ Multiple playlists and accounts are supported. This tool was created with the ai
 
 ## Installation
 ### Dockerfile
-A docker image is provided along with the tool which allows you to install just by typing `docker-compose build` or `make update`. This image is shipped with `ffmpeg` and `wget` which are the two main recording methods available. However, using Docker, you won't be able to easily add custom commands (such as `streamlink` for instance).
+A docker image is provided along with the tool which allows you to install just by typing `docker-compose build` or `make update`. This image is shipped with `ffmpeg` and `wget` which are the two main recording methods available. To add custom commands, you'll need to either edit `Dockerfile` or use `make bash` to install other dependencies.
+
+If you plan to run the software on Windows, you will most likely require to use it.
 ### Normal installation
 #### Requirements
 - Python (3.10 or higher)
@@ -22,7 +22,7 @@ A docker image is provided along with the tool which allows you to install just 
 To install, just type `pip install -r requirements.txt` and all dependencies should be installed.
 ## Configuration
 ### .env
-Create a .env file and fill it with
+Create a .env file at root of project and fill it with
 ```dotenv
 SECRET_KEY=Your Django secret key. Can be anything, see Django docs on how to generate one
 ALLOWED_HOSTS=["localhost", "0.0.0.0"] // add any other host you may need
@@ -57,7 +57,7 @@ Type `python manage.py add_playlist` and fill information about it (name, URL, .
 ### Keep project in the background
 For now, your project is running in your terminal. Close the program and either run `make up_detached` or `make up_detached_d` (if using Docker) to keep program open in background.
 ### Update
-When updating program (via `git pull` or `git checkout`), you may need to restart program or run migrations with `make migrate` (or `make migrate_d`). You may also run a `pip install -r requirements.txt` before all of this (or `make update` if using Docker).
+When updating program (via `git pull` or `git checkout`), you may need to restart program or run migrations with `make migrate` (or `make migrate_d`). You may also need to run a `pip install -r requirements.txt` before all of this (or `make update` if using Docker).
 ### Web page
 The UI is running on the port you defined in `.env` file. So just go to http://YOURHOST:PORT .
 
@@ -67,3 +67,19 @@ To use your project in production, enable UWSGI in your `.env` file and configur
 There are mods to be able to do that:
 - https://httpd.apache.org/docs/2.4/fr/mod/mod_proxy_uwsgi.html
 - https://uwsgi-docs.readthedocs.io/en/latest/Nginx.html
+
+## Add/edit custom commands
+By default, two commands are set :
+- ffmpeg: Takes any stream and outputs it to an MP4 file without transcoding.
+- wget: Downloads raw video into an MP4 file. Only supports unsegmented streams.
+
+You may want to customize them or add other programs. All you need to do is head to Django admin and connect with a superuser. 
+
+Then go to `Recording methods` and either add or edit entries.
+- Termination string can be omitted. By default it is "q" for ffmpeg. Sending q to ffmpeg triggers the end of the program and lets the encoding process finish properly (to avoid corrupted file). This may differ depending on programs (wget doesn't have one for instance).
+- command field contains the command that will be triggered. 
+It has two parameters: {video_url}
+  - {video_url} : Which will be replaced by the stream URL
+  - {output_file_path} : Which will be replaced by the file destination
+
+These two fields must be present in the command.
