@@ -1,5 +1,6 @@
 import json
 import logging
+import os
 import shutil
 from datetime import timedelta
 
@@ -116,6 +117,7 @@ class PlaylistView(PlaylistViewSet):
                     check_live=False,
                     schemes=["http", "https", "rtsp", "udp", "rtmp", "mms"],
                 )
+                os.makedirs(str(settings.BASE_DIR) + "/cache/", exist_ok=True)
                 with open(str(settings.BASE_DIR) + "/cache/" + obj.playlist_cache_file, "w") as f:
                     f.write(json.dumps(parser.get_list()))
                     f.close()

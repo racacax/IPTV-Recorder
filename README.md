@@ -15,7 +15,7 @@ A docker image is provided along with the tool which allows you to install just 
 If you plan to run the software on Windows, you will most likely require to use it.
 ### Normal installation
 #### Requirements
-- Python (3.10 or higher)
+- Python (3.12 or higher)
 - Makefile (required for make commands)
 - ffmpeg and wget (not required but needed for quick installation)
 #### Installation process
