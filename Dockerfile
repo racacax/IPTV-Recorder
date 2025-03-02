@@ -17,4 +17,3 @@ RUN apt update && apt install -y wget ffmpeg
 COPY requirements.txt requirements.txt /app/
 RUN pwd && ls -la && pip install --upgrade pip && \
     pip install -r requirements.txt
-USER nobody
