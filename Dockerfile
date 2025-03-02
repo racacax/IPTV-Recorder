@@ -13,7 +13,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Europe/Paris
 
 # System layer
-RUN apt update && apt install -y netcat-openbsd wget ffmpeg
+RUN apt update && apt install -y wget ffmpeg
 # Python dependencies layer
 COPY requirements.txt requirements.txt /app/
 RUN pwd && ls -la && pip install --upgrade pip && \
