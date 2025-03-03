@@ -13,6 +13,12 @@ msgstr ""
 msgid "Se déconnecter"
 msgstr ""
 
+msgid "403 Forbidden : Veuillez rééssayer de vous reconnecter"
+msgstr ""
+
+msgid "Erreur inconnue"
+msgstr ""
+
 msgid "Nom d'utilisateur"
 msgstr ""
 
@@ -47,6 +53,11 @@ msgid "Vous devez au minimum ajouter une source"
 msgstr ""
 
 msgid "Sauvegardé avec succès"
+msgstr ""
+
+msgid ""
+"Êtes-vous sûr de vouloir supprimer cet enregistrement (fichiers video "
+"inclus) ?"
 msgstr ""
 
 msgid "Êtes-vous sûr de vouloir stopper l'enregistrement ?"

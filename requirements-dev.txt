@@ -1,0 +1,13 @@
+psycopg2
+Django~=5.1.6
+django-model-utils~=5.0.0
+django-environ
+requests
+PyMySQL~=1.1.1
+djangorestframework~=3.15.2
+m3u-parser~=0.4.1
+django-cors-headers~=4.7.0
+psutil~=7.0.0
+flake8==7.1.1
+black==24.10.0
+polib

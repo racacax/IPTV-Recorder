@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-02 10:49+0100\n"
+"POT-Creation-Date: 2025-03-03 22:07+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -24,7 +24,7 @@ msgid "Ajouter une playlist"
 msgstr ""
 
 #: record/management/commands/add_playlist.py:13
-#: record/management/commands/set_user_data.py:13
+#: record/management/commands/set_user_data.py:14
 msgid "Utilisateurs : "
 msgstr ""
 
@@ -55,19 +55,63 @@ msgstr ""
 msgid "Playlist ajoutée"
 msgstr ""
 
-#: record/management/commands/set_user_data.py:11
+#: record/management/commands/generate_env.py:12
+msgid "Création du .env"
+msgstr ""
+
+#: record/management/commands/generate_env.py:21
+msgid "Génération du .env"
+msgstr ""
+
+#: record/management/commands/generate_env.py:24
+msgid "Le fichier .env existe. Voulez-vous l'écraser ? (y/n)"
+msgstr ""
+
+#: record/management/commands/generate_env.py:25
+msgid "Etape de modification du fichier .env ignorée"
+msgstr ""
+
+#: record/management/commands/generate_env.py:37
+msgid ""
+"Veuillez indiquer l'hôte à laquelle votre programme sera disponible (par "
+"défaut localhost/0.0.0.0). Laisser vide pour passer :"
+msgstr ""
+
+#: record/management/commands/generate_env.py:44
+msgid ""
+"Veuillez rentrer le port sur lequel vous voulez faire fonctionner "
+"l'application (8000 par défaut) :"
+msgstr ""
+
+#: record/management/commands/generate_env.py:48
+msgid "Veuillez entrer la langue à utiliser (fr ou en. en par défaut) :"
+msgstr ""
+
+#: record/management/commands/generate_env.py:52
+msgid "Contenu du fichier .env"
+msgstr ""
+
+#: record/management/commands/generate_env.py:58
+msgid "Pour appliquer vos changements, le programme devra être redémarré."
+msgstr ""
+
+#: record/management/commands/generate_js_i18n.py:15
+msgid "Générer les traductions JS"
+msgstr ""
+
+#: record/management/commands/set_user_data.py:12
 msgid "Définition du profil utilisateur"
 msgstr ""
 
-#: record/management/commands/set_user_data.py:16
+#: record/management/commands/set_user_data.py:17
 msgid "Entrez le numéro de l'utilisateur : "
 msgstr ""
 
-#: record/management/commands/set_user_data.py:19
+#: record/management/commands/set_user_data.py:20
 msgid ""
 "Entrez le chemin de destination des enregistrements pour cet utilisateur : "
 msgstr ""
 
-#: record/management/commands/set_user_data.py:21
+#: record/management/commands/set_user_data.py:22
 msgid "Profil utilisateur crée"
 msgstr ""

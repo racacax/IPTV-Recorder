@@ -31,8 +31,11 @@ migrations:
 	python manage.py makemigrations
 migrate:
 	python manage.py migrate
-init: migrate
+init:
+	python manage.py generate_env
 	python manage.py createsuperuser
+	python manage.py set_user_data
+	python manage.py add_playlist
 lint:
 	python -m black .
 	python -m flake8 .
@@ -44,3 +47,12 @@ i18n-generate:
 i18n-compile:
 	django-admin compilemessages --ignore "venv/*" --ignore "frontend/*"
 
+build-js:
+	cd frontend && npm run build
+	rm -f static/assets/index-*
+	rm -f record/templates/index.html
+	mv dist/assets/index-* static/assets/
+	mv dist/index.html record/templates/
+	sed -i -e 's|http://localhost:8000||g' \
+		   -e 's|window\.CSRF_TOKEN = ""|window.CSRF_TOKEN = "{{ csrf_token }}"|g' \
+		   -e 's|/assets|/static/assets|g' record/templates/index.html

@@ -29,10 +29,10 @@ environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env("SECRET_KEY", default="")
+SECRET_KEY = str(env("SECRET_KEY", default="")).strip()
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env("DEBUG")
+DEBUG = env("DEBUG", cast=bool)
 
 ALLOWED_HOSTS = env("ALLOWED_HOSTS", cast=json.loads, default=[])
 
@@ -115,10 +115,10 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
 AVAILABLE_LANGUAGES = ["fr", "en"]
-LANGUAGE_CODE = env("LANGUAGE_CODE", default="en")
+LANGUAGE_CODE = str(env("LANGUAGE_CODE", default="en")).strip()
 LOCALE_PATHS = [BASE_DIR / "locale"]
 
-TIME_ZONE = env("TIME_ZONE", default="Europe/Paris")
+TIME_ZONE = str(env("TIME_ZONE", default="Europe/Paris")).strip()
 
 USE_I18N = True
 
@@ -145,7 +145,7 @@ REST_FRAMEWORK = {
 }
 
 CORS_ALLOW_ALL_ORIGINS = True
-USER_AGENT = env("USER_AGENT", default="VLC/3.0.9 LibVLC/3.0.9")
+USER_AGENT = str(env("USER_AGENT", default="VLC/3.0.9 LibVLC/3.0.9")).strip()
 LOGIN_URL = "/admin/login/"
 STATICFILES_DIRS = [
     BASE_DIR / "static",

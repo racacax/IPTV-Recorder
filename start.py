@@ -1,3 +1,4 @@
+import os
 import subprocess
 import threading
 import time
@@ -12,8 +13,8 @@ env = environ.Env(
 
 environ.Env.read_env("./.env")
 
-HOST = env("HOST", default="0.0.0.0")
-PORT = env("RUNNING_PORT", default=8000)
+HOST = str(env("HOST", default="0.0.0.0")).strip()
+PORT = env("RUNNING_PORT", default=8000, cast=int)
 ENABLE_UWSGI = env("ENABLE_UWSGI", cast=bool, default=False)
 
 
@@ -43,6 +44,11 @@ def launch_recordings_check():
     print("Starting recordings check process...")
     subprocess.Popen("exec python manage.py recordings_check", shell=True)
 
+
+if not os.path.exists("./db.sqlite3"):
+    migration_process = subprocess.Popen("exec make migrate", shell=True)
+    while migration_process.poll() is None:
+        pass
 
 if not ENABLE_UWSGI:
     threading.Thread(target=launch_django_web_server, args=[]).start()

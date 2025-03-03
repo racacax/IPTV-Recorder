@@ -7,6 +7,7 @@ import {
   Token,
   VideoSource,
 } from "./entities";
+import { gettext } from "../main";
 
 export type FetchReturn<T> = {
   error: Ref<string | null>;
@@ -39,18 +40,19 @@ function fetchAndCatch<T>(
       .then((r) => {
         if (r.status >= 400) {
           if (r.status == 403) {
-            error.value =
-              "Got error :403 Forbidden. Might be rate limited (slow down your clicks bucko).";
+            error.value = gettext(
+              "403 Forbidden : Veuillez rééssayer de vous reconnecter",
+            );
             return null;
           } else {
             return r
               .json()
               .then((j) => {
-                error.value = j?.message ?? "Unknown error";
+                error.value = j?.message ?? gettext("Erreur inconnue");
                 return null;
               })
               .catch(() => {
-                error.value = "Unknown error";
+                error.value = gettext("Erreur inconnue");
                 return null;
               });
           }

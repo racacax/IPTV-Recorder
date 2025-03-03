@@ -50,10 +50,13 @@
 import { API, CheckClient } from "./service/API.ts";
 import { useRouter } from "vue-router";
 import { gettext } from "./main.ts";
+import { watch } from "vue";
 const router = useRouter();
-const { fetchFn } = CheckClient.list({ lazy: true });
-fetchFn().catch(() => {
-  router.push({ path: "/login" });
+const { error } = CheckClient.list();
+watch(error, () => {
+  if (error) {
+    router.push({ path: "/login" });
+  }
 });
 
 function logout() {

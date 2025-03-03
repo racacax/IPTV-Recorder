@@ -16,46 +16,42 @@ A docker image is provided along with the tool which allows you to install just 
 **If you use Docker, the output port will be 35699. However, you must keep 8000 as a port in the configuration.**
 
 If you plan to run the software on Windows, you will most likely require to use it.
+
+
+**For any following make command, if you use Docker, you must add `_d` at the end (e.g. `make up` becomes `make up_d`). Another solution is to run make commands inside Docker bash (this works for every command except `make up`).**
+
+**For any python command (e.g `python manage.py set_user_data`), if you use Docker, you must be inside Docker container bash to run it.**
+
+**To enter Docker container bash, type `make bash`.**
+
 ### Normal installation
 #### Requirements
 - Python (3.12 or higher)
 - Makefile (required for make commands)
 - ffmpeg and wget (not required but needed for quick installation)
 #### Installation process
-To install, just type `pip install -r requirements.txt` and all dependencies should be installed.
+To install, just type `pip install -r requirements-dev.txt` and all dependencies should be installed.
 ## Configuration
-### .env
-Create a .env file at root of project and fill it with (remove all comments)
-```dotenv
-SECRET_KEY=Your Django secret key. Can be anything, see Django docs on how to generate one
-ALLOWED_HOSTS=["localhost", "0.0.0.0"] // add any other host you may need
-DEBUG=True // or False in production mode
-RUNNING_PORT=8000 // or any other port
-HOST=0.0.0.0
-LANGUAGE_CODE=fr // or en for english
-ENABLE_UWSGI=False // False if dev mode. Use True for production use !
-```
-For the next steps, we will consider you are not in production mode and UWSGI is not enabled (yet).
 ### Start project
-Start project by typing `make up` (or `make up_d` if using Docker). An error will appear but that's normal.
-### User creation
-You first need to create a superuser by typing command `make init` (or `make init_d` if using Docker). After that, close program and restart it using `make up ` or `make up_d`.
-### Command line vs Django Admin
-IPTV Recorder is built with Django framework which provides an admin.
+Start project by typing `make up` or `make up_d` (if using Docker). You should see the database being created. An error message stating `CommandError: You must set settings.ALLOWED_HOSTS if DEBUG is False.` should appear. This is normal, our .env isn't configurated yet. You shouldn't have any other error. 
+### Init script
+Type `make init`. This will trigger .env and necessary steps.
+#### .env
+Basic information will be set in the definition of .env process. The most important part is `ALLOWED_HOSTS` step. You must add the host where you will access your app.
 
-To set user data and playlist, you will need to set those information by following the next steps by either:
-- Using some command lines
-- Go to Django Admin (http://YOURHOST:PORT/admin/)
+**DEBUG mode and uWSGI will be disabled. But it is recommended to disable DEBUG and enable uWSGI once all is configured (see one of the later points).**
+#### User creation
+This will create a super user which will be able to access the whole admin of the app. You'll also set the recordings writing directory path.
 
-If using Docker, type `make bash` before doing next steps (command line only).
-### User data definition
-To set user data, type `python manage.py set_user_data`. The command prompt will ask you some information to fill (Recordings output directory, ...). You can also do it in Django admin by creating an "User data" object for your user.
+If you want to add another user in the future, just head to Django admin and once user is created, type command `python manage.py set_user_data`. If using Docker
+#### Add playlist
+You must set a playlist for the user to be able to use the software. Playlist has to be in M3U format.
 
-### Add a playlist
-To be able to use the software, you must have an M3U playlist (at least).
+**Note: The software struggles with large files for now. Try to provide a filtered playlist.**
 
-Type `python manage.py add_playlist` and fill information about it (name, URL, ...).
-
+If you want to add another playlist in the future, either head to Django Admin. Or type command `python manage.py add_playlist`.
+#### Restart program
+Once everything is setup close the program and restart it. You should see it running at address http://YOURHOST:PORT/
 ## Use the software
 ### Keep project in the background
 For now, your project is running in your terminal. Close the program and either run `make up_detached` or `make up_detached_d` (if using Docker) to keep program open in background.
@@ -66,7 +62,10 @@ The UI is running on the port you defined in `.env` file. So just go to http://Y
 
 ## Keep project safe for production use
 If your project is on a public server, security is important. Until now, you were using Django Dev Server which is not production ready.
-To use your project in production, enable UWSGI in your `.env` file and configure a UWSGI proxy on the web server software you are using (Apache, NGINX, ...).
+To use your project in production:
+- Install uWSGI by typing (if not using Docker. Docker image already has it preinstalled.)
+```pip install -r requirements.txt```
+- Enable UWSGI in your `.env` file and configure a UWSGI proxy on the web server software you are using (Apache, NGINX, ...).
 There are mods to be able to do that:
 - https://httpd.apache.org/docs/2.4/fr/mod/mod_proxy_uwsgi.html
 - https://uwsgi-docs.readthedocs.io/en/latest/Nginx.html
