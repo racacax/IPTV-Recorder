@@ -31,19 +31,21 @@ If you plan to run the software on Windows, you will most likely require to use 
 - ffmpeg and wget (not required but needed for quick installation)
 #### Installation process
 To install, just type `pip install -r requirements-dev.txt` and all dependencies should be installed.
+
+Note: You may need to create a virtual-env depending on your Python configuration (and it is recommended to do so).
 ## Configuration
 ### Start project
 Start project by typing `make up` or `make up_d` (if using Docker). You should see the database being created. An error message stating `CommandError: You must set settings.ALLOWED_HOSTS if DEBUG is False.` should appear. This is normal, our .env isn't configurated yet. You shouldn't have any other error. 
 ### Init script
-Type `make init`. This will trigger .env and necessary steps.
+Type `make init`. This will trigger .env definition process and necessary steps.
 #### .env
-Basic information will be set in the definition of .env process. The most important part is `ALLOWED_HOSTS` step. You must add the host where you will access your app.
+Basic information will be set in the definition of .env file. The most important part is `ALLOWED_HOSTS` step. You must add the host where you will access your app.
 
 **DEBUG mode and uWSGI will be disabled. But it is recommended to disable DEBUG and enable uWSGI once all is configured (see one of the later points).**
 #### User creation
 This will create a super user which will be able to access the whole admin of the app. You'll also set the recordings writing directory path.
 
-If you want to add another user in the future, just head to Django admin and once user is created, type command `python manage.py set_user_data`. If using Docker
+If you want to add another user in the future, just head to Django admin and once user is created, type command `python manage.py set_user_data`.
 #### Add playlist
 You must set a playlist for the user to be able to use the software. Playlist has to be in M3U format.
 
