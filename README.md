@@ -37,7 +37,7 @@ Note: You may need to create a virtual-env depending on your Python configuratio
 ### Start project
 Start project by typing `make up` or `make up_d` (if using Docker). You should see the database being created. An error message stating `CommandError: You must set settings.ALLOWED_HOSTS if DEBUG is False.` should appear. This is normal, our .env isn't configurated yet. You shouldn't have any other error. 
 ### Init script
-Type `make init`. This will trigger .env definition process and necessary steps.
+Type `make init` (or `make init_d` if using Docker). This will trigger .env definition process and necessary steps.
 #### .env
 Basic information will be set in the definition of .env file. The most important part is `ALLOWED_HOSTS` step. You must add the host where you will access your app.
 
