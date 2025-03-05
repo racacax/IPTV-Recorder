@@ -4,3 +4,4 @@ cache
 db.sqlite3
 project-master.pid
 .env
+process.pid

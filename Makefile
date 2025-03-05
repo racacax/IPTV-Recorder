@@ -6,6 +6,8 @@ up_d:
 	${DCO_EXE} up
 up_detached_d:
 	${DCO_EXE} up -d
+stop_d:
+	${DCO_EXE} stop
 update build:
 	${DCO_EXE} build
 migrations_d:
@@ -27,6 +29,8 @@ up:
 	python start.py
 up_detached:
 	python start.py & disown
+stop:
+	python stop.py
 migrations:
 	python manage.py makemigrations
 migrate:

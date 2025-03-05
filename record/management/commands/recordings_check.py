@@ -114,5 +114,8 @@ class Command(BaseCommand):
                 except Exception as e:
                     logging.exception(f"{e}")
             for recording in Recording.objects.filter(id__in=RUNNING_IDS, end_time__lte=current_date):
-                stop_recording(recording)
-            time.sleep(1)
+                threading.Thread(
+                    target=stop_recording,
+                    args=[recording],
+                ).start()
+            time.sleep(5)

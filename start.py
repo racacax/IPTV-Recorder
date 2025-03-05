@@ -6,6 +6,8 @@ import time
 import environ
 import psutil
 
+from stop import is_process_running
+
 env = environ.Env(
     # set casting, default value
     DEBUG=(bool, False)
@@ -45,6 +47,12 @@ def launch_recordings_check():
     subprocess.Popen("exec python manage.py recordings_check", shell=True)
 
 
+if is_process_running():
+    print("Process already running. Please run 'make stop' before running it again.")
+    exit(2)
+
+with open("process.pid", "w") as f:
+    f.write(str(os.getpid()))
 if not os.path.exists("./db.sqlite3"):
     migration_process = subprocess.Popen("exec make migrate", shell=True)
     while migration_process.poll() is None:

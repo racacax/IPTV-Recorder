@@ -57,6 +57,8 @@ Once everything is setup close the program and restart it. You should see it run
 ## Use the software
 ### Keep project in the background
 For now, your project is running in your terminal. Close the program and either run `make up_detached` or `make up_detached_d` (if using Docker) to keep program open in background.
+
+To stop program, just run `make stop` or `make stop_d`.
 ### Update
 When updating program (via `git pull` or `git checkout`), you may need to restart program or run migrations with `make migrate` (or `make migrate_d`). You may also need to run a `pip install -r requirements.txt` before all of this (or `make update` if using Docker).
 ### Web page
