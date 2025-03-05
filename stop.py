@@ -1,6 +1,7 @@
 import os
 
 import psutil
+from psutil import ZombieProcess
 
 
 def is_process_running():
@@ -23,7 +24,11 @@ if __name__ == "__main__":
         print("Process is running. Terminating it and all its children...")
         parent = psutil.Process(thread_pid)
         for child in parent.children(recursive=True):
-            child.terminate()
+            try:
+                print("Terminating child {}".format(child.cmdline()))
+                child.terminate()
+            except ZombieProcess:
+                print("One child was a zombie...")
         print("Terminating main thread...")
         parent.terminate()
         print("All processes have been terminated.")
