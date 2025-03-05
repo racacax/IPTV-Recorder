@@ -23,7 +23,6 @@ if __name__ == "__main__":
         print("Process is running. Terminating it and all its children...")
         parent = psutil.Process(thread_pid)
         for child in parent.children(recursive=True):
-            print("Terminating child {}".format(child.cmdline()))
             child.terminate()
         print("Terminating main thread...")
         parent.terminate()
